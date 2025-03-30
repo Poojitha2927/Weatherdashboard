@@ -1,37 +1,36 @@
-import React from 'react';
-import { useState, useRef, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
-import '../App.css';
-import Button from 'react-bootstrap/Button';
-import CityTiles from './CityTiles.jsx';
-import Form from 'react-bootstrap/Form';
-import Container from 'react-bootstrap/Container';
+import React, { useState, useRef } from "react";
+import { Container, Form, Button } from "react-bootstrap";
+import CityTiles from "./CityTiles"; // Ensure this is correctly imported
 
-export default function Dashboard() {
-  const [location, setLocation] = useState('');
+function Dashboard() {
+  // State for location
+  const [location, setLocation] = useState("");
+
+  // Reference for input field
   const inputLocation = useRef(null);
 
-  useEffect(() => {
-    inputLocation.current.focus();
-  }, []);
-
-  //listens for enter key, has same effect as clicking search button
-  const handleKeyDown = (event) => {
-    console.log('User pressed: ', event.key);
-
-    if (event.key === 'Enter') {
-      console.log('Enter key pressed ✅');
-      GetLocation();
-    }
-  };
-
-  //sets location to call weather API in WeatherTile component
+  // Function to set location and trigger API call
   function GetLocation() {
-    setLocation(inputLocation.current.value);
-    console.log(location);
-    console.log('searching...');
+    if (inputLocation.current) {
+      const newLocation = inputLocation.current.value.trim();
+      if (newLocation) {
+        setLocation(newLocation);
+        console.log("Searching for:", newLocation);
+      } else {
+        console.log("Please enter a valid city name.");
+      }
+    }
   }
 
+  // Handle Enter key press inside input
+  function handleKeyDown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault(); // Prevent form submission
+      GetLocation();
+    }
+  }
+
+  // Search Bar Component
   function SearchBar() {
     return (
       <Form className="d-flex">
@@ -45,9 +44,8 @@ export default function Dashboard() {
         />
         <Button
           className="ms-2 mt-2 myFont bold"
-          gap={1}
           variant="outline-dark"
-          onClick={() => GetLocation()}
+          onClick={GetLocation}
         >
           Search
         </Button>
@@ -67,3 +65,5 @@ export default function Dashboard() {
     </div>
   );
 }
+
+export default Dashboard;
